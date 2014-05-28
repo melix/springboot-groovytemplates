@@ -27,7 +27,17 @@ class PersonController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView save(Person person) {
-        person.merge()
+        if (person.id) {
+            // update
+            def p = person.get(person.id)
+            p.with {
+                firstName = person.firstName
+                lastName = person.lastName
+                save()
+            }
+        } else {
+            person.save()
+        }
         new ModelAndView("redirect:/person/list")
     }
 
